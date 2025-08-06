@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visão 2</title>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap');
+
+.old-standard-tt-regular {
+  font-family: "Old Standard TT", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.old-standard-tt-bold {
+  font-family: "Old Standard TT", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.old-standard-tt-regular-italic {
+  font-family: "Old Standard TT", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        body {
+            font-family: 'Old Standard TT', serif;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            max-width: 700px;
+            padding: 50px;
+            background: linear-gradient(135deg, rgba(15, 15, 15, 0.95), rgba(25, 25, 25, 0.9));
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 0, 0, 0.2);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 30px rgba(255, 0, 0, 0.1);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateY(0) scale(1);
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #ff0000;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .slide p {
+            font-size: 1.4rem;
+            line-height: 2;
+            margin-bottom: 25px;
+            color: #f0f0f0;
+            text-align: justify;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .slide img {
+            max-width: 80%;
+            max-height: 70vh;
+            width: auto;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+            margin: 20px auto 0 auto;
+            pointer-events: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            display: block;
+            object-fit: contain;
+        }
+
+        .slide:last-child {
+            padding: 30px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            width: auto;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            border: none;
+            border-radius: 25px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.6);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .progress-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .progress-dot.active {
+            background: #ff0000;
+            border-color: rgba(255, 0, 0, 0.5);
+            box-shadow: 
+                0 0 15px rgba(255, 0, 0, 0.6),
+                inset 0 0 5px rgba(255, 255, 255, 0.2);
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .slide h2 {
+                font-size: 2rem;
+            }
+
+            .slide p {
+                font-size: 1.1rem;
+            }
+
+            .slide:last-child {
+                padding: 15px 20px;
+            }
+
+            .slide:last-child img {
+                max-width: 85%;
+                max-height: 60vh;
+            }
+
+            .controls {
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                justify-content: center;
+                align-items: center;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress" id="progress">
+        <!-- As bolinhas serão criadas dinamicamente pelo JavaScript -->
+    </div>
+
+    <div class="container">
+        <div class="slide active">
+            <p>Você estava viva.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Pela primeira vez em semanas — talvez meses — você respirava sem afundar. O cheiro da terra molhada, o farfalhar das folhas, a presença dela ao seu lado… era como se o mundo tivesse se lembrado de ser gentil.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Ela sorria. Corria entre as árvores. Você riu também.</p>
+            <p>Riu de verdade.</p>
+            <p>Seu peito se abriu um pouco. Doeu. Mas era um tipo diferente de dor. Um que você desejava sentir mais vezes.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Por um instante, você achou que talvez houvesse cura para o que carregava.</p>
+        </div>
+
+        <div class="slide">
+            <img src="assets/visao-2.jpg" alt="Cidade perdida na floresta">
+        </div>
+
+        <div class="slide active">
+            <p>Mas então…</p>
+            <p>O som.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Sutil. Um estalo seco entre os galhos. Um eco estranho, abafado.</p>
+            <p>Você congelou. Ela não ouviu.</p>
+            <p>Você pediu que ajudasse a procurar. Ela hesitou.</p>
+            <p>Mas você insistiu.</p>
+        </div>
+
+        <div class="slide active">
+            <p>E quando ela desapareceu entre as folhagens…</p>
+            <p>Você sentiu.</p>
+        </div>
+
+        <div class="slide active">
+            <p>A mudança.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Era como se algo estivesse se movendo dentro do seu peito. Um calor úmido. Um nó de dor mal digerida.</p>
+            <p>Sua boca secava. Suas mãos tremiam. O estômago se revirava como se exigisse algo — não comida. Não consolo.</p>
+            <p>Algo mais profundo.</p>
+            <p>Mais antigo.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Você não entendeu. Não queria entender.</p>
+            <p>Mas então ela voltou.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Com aquele sorriso.</p>
+        </div>
+
+        <div class="slide active">
+            <p>E foi aí que tudo desmoronou.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Você não pensou.</p>
+            <p>Seu corpo se moveu sozinho.</p>
+            <p>As unhas cravaram na pele dela. Os gritos se misturaram ao som da sua respiração ofegante.</p>
+            <p>O gosto quente. A carne macia.</p>
+            <p>O sangue que escorria pelo queixo.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Você viu os olhos dela tentando entender.</p>
+            <p>E depois… nada.</p>
+        </div>
+
+        <div class="slide active">
+            <p>O silêncio.</p>
+            <p>O horror.</p>
+            <p>As mãos cobertas de sangue.</p>
+            <p>O estômago, finalmente em paz.</p>
+            <p>E o coração, quebrado em lugares que você nem sabia que existiam.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Você tentou gritar. Mas já não lembrava como.</p>
+        </div>
+
+        <div class="slide active">
+            <p>Ali, de joelhos, entre o barro e os ossos, você entendeu:</p>
+            <p>algo havia sido arrancado de você.</p>
+            <p>E algo novo… tinha nascido no lugar.</p>
+        </div>
+
+        <div class="slide">
+            <img src="assets/visao-3.jpg" alt="Cidade perdida na floresta">
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="previousSlide()">Anterior</button>
+        <button class="btn" id="nextBtn" onclick="nextSlide()">Próximo</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressContainer = document.getElementById('progress');
+        let progressDots = [];
+
+        // Criar bolinhas de progresso dinamicamente
+        function createProgressDots() {
+            progressContainer.innerHTML = '';
+            progressDots = [];
+            
+            for (let i = 0; i < slides.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                if (i === 0) dot.classList.add('active');
+                
+                dot.addEventListener('click', () => {
+                    currentSlide = i;
+                    showSlide(currentSlide);
+                });
+                
+                progressContainer.appendChild(dot);
+                progressDots.push(dot);
+            }
+        }
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            progressDots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[n].classList.add('active');
+            progressDots[n].classList.add('active');
+            
+            // Atualizar botões
+            prevBtn.disabled = n === 0;
+            nextBtn.disabled = n === slides.length - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Navegação com teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Inicializar
+        createProgressDots();
+        showSlide(0);
+    </script>
+</body>
+</html>
